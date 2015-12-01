@@ -52,15 +52,24 @@ class RecebimentosController < ApplicationController
     valor_base            = cobranca.valor
     data_calculo          = min_data = cobranca.vencimento
     ultimo_recebimento    = cobranca.recebimentos.last
-    valor_base            = ultimo_recebimento.valor_base if cobranca.recebimentos.any?
+    juros_simples      = juros_simples?
 
     if cobranca.recebimentos.any?
-      juros_atual         = ultimo_recebimento.juros_atual
-      multa_atual         = ultimo_recebimento.multa_atual
       data_calculo        = ultimo_recebimento.data
+      valor_base          = ultimo_recebimento.valor_base
+      if juros_simples
+        juros_atual       = ultimo_recebimento.juros_atual
+        multa_atual       = ultimo_recebimento.multa_atual
+      end
+      if juros_simples != ultimo_recebimento.juros_simples
+        unless juros_simples
+          valor_base += ultimo_recebimento.juros_atual
+          valor_base += ultimo_recebimento.multa_atual
+        end
+      end
       if data && data_calculo > data
-        min_data_error      = -1
-        min_data            = data_calculo
+        min_data_error    = -1
+        min_data          = data_calculo
       end
     end
 
@@ -80,11 +89,17 @@ class RecebimentosController < ApplicationController
       {valor_base: valor_base, juros: juros, multa: multa, valor: valor}
     )
 
-    encargoAtual = jurosMultaAtual(
-      {juros: juros, multa: multa, valor: valor, divida_cobranca: divida_cobranca}
-    )
+    if juros_simples
+      encargoAtual = jurosMultaAtual(
+        {juros: juros, multa: multa, valor: valor, divida_cobranca: divida_cobranca}
+      )
+      valor_base = divida_cobranca unless (juros+multa) > valor
+    else
+      valor_base = divida_cobranca
+      encargoAtual = {}
+      encargoAtual[:juros_atual] = encargoAtual[:multa_atual] = 0
+    end
 
-    valor_base = divida_cobranca unless (juros+multa) > valor
     pagamentoMaior = divida_cobranca if divida_cobranca < 0
     divida_cobranca = (divida_cobranca - pagamentoMaior)
 
@@ -97,7 +112,8 @@ class RecebimentosController < ApplicationController
       pagamentoMaior: pagamentoMaior.round(2),
       juros_atual: encargoAtual[:juros_atual].round(2),
       multa_atual: encargoAtual[:multa_atual].round(2),
-      valor_base: valor_base.round(2)
+      valor_base: valor_base.round(2),
+      juros_simples: juros_simples
     }
   end
 
@@ -114,13 +130,20 @@ class RecebimentosController < ApplicationController
 
   def recebimento_param
     if params[:recebimento].present?
-      params.require(:recebimento).permit(:valor, :juros, :multa, :data, :valor_base, :juros_atual, :multa_atual, :cobranca_id)
+      params.require(:recebimento).permit(
+        :valor, :juros, :multa, :data, :valor_base, :juros_atual,
+        :multa_atual, :cobranca_id, :juros_simples
+      )
     else
       {}
     end
   end
 
   private
+
+  def juros_simples?
+    @simples ||= ConfigCobranca.last.juros_simples
+  end
 
   def jurosMultaAtual(obj)
     if (obj[:juros] + obj[:multa]) > obj[:valor]

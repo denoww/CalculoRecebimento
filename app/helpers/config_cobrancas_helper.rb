@@ -1,0 +1,2 @@
+module ConfigCobrancasHelper
+end

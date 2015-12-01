@@ -2,6 +2,7 @@
 class Recebimento < ActiveRecord::Base
   validates :valor, :data, :cobranca_id, presence: {message: "Não pode ser vazio"}
 
+  belongs_to :config_cobranca
   belongs_to :cobranca
 
   def to_frontEnd_obj

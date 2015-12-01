@@ -51,6 +51,18 @@
     </div>
   </section>
 
+  <section id="receber" style="width: 50%" class="pull-left">
+    <div class="sc-m-t-lg">
+      <p class="sc-text-gray">Tipo de Recebimento</p>
+      <label >
+        <span class="sc-toggle" >
+          <input ng-change="mudarTipoReceb(tipo_recebe)" ng-model="tipo_recebe" type="checkbox" checked />
+          <span label-true="Simples" label-false="Composto"></span>
+        </span>
+      </label>
+    </div>
+  </section>
+
   <section id="listing">
     <ul class="sc-accordion">
       <li class="sc-acc-gray-light">

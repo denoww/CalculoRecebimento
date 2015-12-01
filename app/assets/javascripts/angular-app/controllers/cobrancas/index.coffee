@@ -1,7 +1,7 @@
 angular.module 'app'
   .controller 'Cobranca::IndexCtrl', [
-    '$scope', '$timeout', '$filter', 'CobrancaResource', 'RecebimentoResource', 'ReceberResource', 'scTopMessages', 'scAlert'
-    (sc, $timeout, $filter, CobrancaResource, RecebimentoResource, ReceberResource, scTopMessages, scAlert)->
+    '$scope', '$timeout', '$filter', 'CobrancaResource', 'RecebimentoResource', 'ReceberResource', 'scTopMessages', 'scAlert', 'ConfigCobrancaResource'
+    (sc, $timeout, $filter, CobrancaResource, RecebimentoResource, ReceberResource, scTopMessages, scAlert, ConfigCobrancaResource)->
 
       idCobranca = 1
 
@@ -13,25 +13,32 @@ angular.module 'app'
           scTopMessages.openDanger "Houve algum erro na busca da cobrança, contate ao Suporte se percistir!"
 
       sc.receber =
-        data: ''
-        valor: 0
-        juros: 0
-        multa: 0
-        valor_base: 0
-        juros_atual: 0
-        multa_atual: 0
-        cobranca_id: idCobranca
+        data: '', valor: 0, juros: 0, multa: 0, valor_base: 0, juros_atual: 0
+        multa_atual: 0, cobranca_id: idCobranca, juros_simples: true
+
+      sc.mudarTipoReceb = (j_simples = true)->
+        config_cobrancas =
+          juros_simples: j_simples
+        ConfigCobrancaResource.update
+          id: 1,
+          config_cobrancas,
+          (data)->
+            # Sucesso
+          (response)->
+            scAlert.open
+              title: 'Atenção!'
+              messages: response.data.errors
+              buttons: [
+                {
+                  label: 'Ok'
+                  color: 'yellow'
+                }
+              ]
 
       resetReceb = ()->
         sc.receber =
-          data: ''
-          valor: 0
-          juros: 0
-          multa: 0
-          valor_base: 0
-          juros_atual: 0
-          multa_atual: 0
-          cobranca_id: idCobranca
+          data: '', valor: 0, juros: 0, multa: 0, valor_base: 0, juros_atual: 0
+          multa_atual: 0, cobranca_id: idCobranca, juros_simples: true
 
       sc.addRec = ()->
         if sc.receber.valor != 0
