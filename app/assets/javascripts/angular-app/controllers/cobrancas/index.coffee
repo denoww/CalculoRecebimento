@@ -5,6 +5,8 @@ angular.module 'app'
 
       idCobranca = 1
 
+      sc.tipo_recebe = true
+
       sc.carregando = true
       sc.cobranca = CobrancaResource.get {id: idCobranca},
         (data)->
