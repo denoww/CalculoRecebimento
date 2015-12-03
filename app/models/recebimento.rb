@@ -12,6 +12,7 @@ class Recebimento < ActiveRecord::Base
       juros: juros,
       multa: multa,
       data: data,
+      juros_simples: juros_simples,
       juros_atual: juros_atual,
       multa_atual: multa_atual,
       valor_base: valor_base,

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201120020) do
+ActiveRecord::Schema.define(version: 20151201140206) do
 
   create_table "cobrancas", force: :cascade do |t|
     t.decimal  "valor",      precision: 14, scale: 2
