@@ -54,7 +54,6 @@ class RecebimentosController < ApplicationController
     data_calculo          = min_data = cobranca.vencimento
     ultimo_recebimento    = cobranca.recebimentos.last
     juros_simples         = ConfigCobranca.last.juros_simples
-    puts '\n------- ConfigCobranca.last.juros_simples ----------\n', ConfigCobranca.last.juros_simples
 
     if cobranca.recebimentos.any?
       data_calculo        = ultimo_recebimento.data
@@ -76,7 +75,7 @@ class RecebimentosController < ApplicationController
             end
           end
           valor_base = cobranca.valor
-          valor_base = cobranca.divida_cobranca if totais[:recebimentos] > totais[:jurosMulta]
+          valor_base = cobranca.divida if totais[:recebimentos] > totais[:jurosMulta]
         else
           valor_base += ultimo_recebimento.juros_atual
           valor_base += ultimo_recebimento.multa_atual
