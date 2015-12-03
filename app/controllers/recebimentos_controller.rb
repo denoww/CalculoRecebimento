@@ -45,6 +45,38 @@ class RecebimentosController < ApplicationController
   end
 
   def calcular_divida
+    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+    #                                                       #
+    # Anotações sobre algumas regras                        #
+    #                                                       #
+    # Linha 98 ~ 115 (juros atual diferente do anterior     #
+    #                   Simples / Composto):                #
+    #                                                       #
+    # 1 => caso ele seja composto, deve apenas atualizar o  #
+    #    o valor base somando a multa e juros do            #
+    #    recebimento anterior.                              #
+    #                                                       #
+    # 2 => se o atual for simples, deve calcular para saber #
+    #    qual é o juros e multa que não foram pagas pelo    #
+    #    composto, juntamente o valor base de calculo.      #
+    #                                                       #
+    # Linha 138 ~ 147 (atualizar valor base, juros e multa  #
+    #                     para o próximo recebimento):      #
+    #                                                       #
+    # 1 => no caso de ser simples, deve calcular os juros e #
+    #    multa atuais tomando os devidos cuidados de não    #
+    #    permitir juros sobre juros e multa sobre multa.    #
+    #                                                       #
+    # 1.1 => valor base tambem deve se ter atenção, pois    #
+    #     pois nele evitamos tambem recebimentos de juros   #
+    #     sobre juros, multa sobre multa.                   #
+    #                                                       #
+    # 2 => no caso de composto, devemos apenar zerar os     #
+    #   juros e multas atuais, e atribuir o msm valor da    #
+    #   da divida como valor base.                          #
+    #                                                       #
+    #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+
     cobranca = Cobranca.where(id: params[:cobranca_id]).first
     data, valor = params.values_at(:data, :valor)
     pagamentoMaior = juros_atual = multa_atual = min_data_error = diferenca_data = 0
@@ -63,7 +95,10 @@ class RecebimentosController < ApplicationController
         multa_atual       = ultimo_recebimento.multa_atual
       end
 
-      if juros_simples != ultimo_recebimento.juros_simples
+      trocou_tipo_juros = juros_simples != ultimo_recebimento.juros_simples
+      if trocou_tipo_juros
+        valor_base += ultimo_recebimento.juros_atual
+        valor_base += ultimo_recebimento.multa_atual
         if juros_simples
           juros_atual = multa_atual = 0
           totais = cobranca.getTotais
@@ -76,9 +111,6 @@ class RecebimentosController < ApplicationController
           end
           valor_base = cobranca.valor
           valor_base = cobranca.divida if totais[:recebimentos] > totais[:jurosMulta]
-        else
-          valor_base += ultimo_recebimento.juros_atual
-          valor_base += ultimo_recebimento.multa_atual
         end
       end
       if data && data_calculo > data
@@ -172,7 +204,6 @@ class RecebimentosController < ApplicationController
 
   def calcular_juros(obj, cobranca)
     if obj[:diferenca_data] > 0
-      puts '\n -------------- OBJ ----------- \n', obj[:juros_atual]
       juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data]
       juros += obj[:juros_atual] if obj[:juros_atual] > 0
     end
