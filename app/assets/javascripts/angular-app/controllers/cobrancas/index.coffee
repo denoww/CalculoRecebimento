@@ -5,12 +5,12 @@ angular.module 'app'
 
       idCobranca = 1
 
-      sc.tipo_recebe = true
 
       sc.carregando = true
       sc.cobranca = CobrancaResource.get {id: idCobranca},
         (data)->
           sc.carregando = false
+          sc.tipo_recebe = data.configCobranca.juros_simples
         (response)->
           scTopMessages.openDanger "Houve algum erro na busca da cobrança, contate ao Suporte se percistir!"
 
