@@ -4,6 +4,7 @@ class RecebimentosController < ApplicationController
 
   def create
     recebimento = Recebimento.new(recebimento_param)
+    recebimento.juros_simples = ConfigCobranca.last.juros_simples
     cobranca = recebimento.cobranca
     if validar_data_recebimento
       if cobranca
@@ -52,7 +53,8 @@ class RecebimentosController < ApplicationController
     valor_base            = cobranca.valor
     data_calculo          = min_data = cobranca.vencimento
     ultimo_recebimento    = cobranca.recebimentos.last
-    juros_simples      = juros_simples?
+    juros_simples         = ConfigCobranca.last.juros_simples
+    puts '\n------- ConfigCobranca.last.juros_simples ----------\n', ConfigCobranca.last.juros_simples
 
     if cobranca.recebimentos.any?
       data_calculo        = ultimo_recebimento.data
@@ -61,8 +63,21 @@ class RecebimentosController < ApplicationController
         juros_atual       = ultimo_recebimento.juros_atual
         multa_atual       = ultimo_recebimento.multa_atual
       end
+
       if juros_simples != ultimo_recebimento.juros_simples
-        unless juros_simples
+        if juros_simples
+          juros_atual = multa_atual = 0
+          totais = cobranca.getTotais
+          if (totais[:jurosMulta]) > totais[:recebimentos]
+            multa_atual = totais[:multa] - (totais[:recebimentos] - totais[:juros])
+            if totais[:juros] > totais[:recebimentos]
+              juros_atual = totais[:juros] - totais[:recebimentos]
+              multa_atual = totais[:multa]
+            end
+          end
+          valor_base = cobranca.valor
+          valor_base = cobranca.divida_cobranca if totais[:recebimentos] > totais[:jurosMulta]
+        else
           valor_base += ultimo_recebimento.juros_atual
           valor_base += ultimo_recebimento.multa_atual
         end
@@ -141,10 +156,6 @@ class RecebimentosController < ApplicationController
 
   private
 
-  def juros_simples?
-    @simples ||= ConfigCobranca.last.juros_simples
-  end
-
   def jurosMultaAtual(obj)
     if (obj[:juros] + obj[:multa]) > obj[:valor]
       multa_atual = obj[:multa] - (obj[:valor] - obj[:juros])
@@ -162,6 +173,7 @@ class RecebimentosController < ApplicationController
 
   def calcular_juros(obj, cobranca)
     if obj[:diferenca_data] > 0
+      puts '\n -------------- OBJ ----------- \n', obj[:juros_atual]
       juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data]
       juros += obj[:juros_atual] if obj[:juros_atual] > 0
     end

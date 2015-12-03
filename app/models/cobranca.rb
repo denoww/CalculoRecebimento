@@ -11,6 +11,7 @@ class Cobranca < ActiveRecord::Base
       multa: multa,
       divida_cobranca: divida,
       vencimento: vencimento,
+      configCobranca: ConfigCobranca.last,
       totais: getTotais,
       recebimentos: recebimentos.map(&:to_frontEnd_obj),
       composicaoCobranca: composicao_cobrancas.ordem_de_criacao.map(&:to_frontEnd_obj)
