@@ -11,6 +11,7 @@ gem 'coffee-rails'
 gem 'bower-rails'
 gem 'jbuilder'
 
+gem 'exception_notification'
 group :production do
   gem 'pg'
 end
