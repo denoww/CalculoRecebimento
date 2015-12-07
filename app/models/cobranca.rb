@@ -4,7 +4,6 @@ class Cobranca < ActiveRecord::Base
   has_many :composicao_cobrancas
 
   def to_frontEnd_obj
-    raise "asdasdadqwsasd"
     return {
       id: id,
       valor: valor,
