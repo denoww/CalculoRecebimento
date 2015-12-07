@@ -3,7 +3,6 @@ class CobrancasController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def index
-    raise "aasdasdasd"
     respond_to do |f|
       f.html { render_layout }
       f.json { render json: Cobranca.all.map(&:to_frontEnd_obj) }
