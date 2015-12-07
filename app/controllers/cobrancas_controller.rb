@@ -4,10 +4,7 @@ class CobrancasController < ApplicationController
 
   def index
     respond_to do |f|
-      f.html {
-        raise "asdasdadqwsasd"
-        render_layout
-      }
+      f.html { render_layout }
       f.json { render json: Cobranca.all.map(&:to_frontEnd_obj) }
     end
   end
