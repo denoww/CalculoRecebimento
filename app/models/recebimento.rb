@@ -5,6 +5,17 @@ class Recebimento < ActiveRecord::Base
   belongs_to :config_cobranca
   belongs_to :cobranca
 
+  scope :somente_juros_simples, lambda { where(juros_simples: true) }
+  scope :ultimos_criados, lambda { order("created_at desc") }
+
+  def self.ultimo
+    ultimos_criados.first
+  end
+
+  def self.ultimo_juros_simples
+    somente_juros_simples.ultimos_criados.first
+  end
+
   def to_frontEnd_obj
     {
       id: id,

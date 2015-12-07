@@ -90,17 +90,12 @@ class RecebimentosController < ApplicationController
     if cobranca.recebimentos.any?
       data_calculo        = ultimo_recebimento.data
       valor_base          = ultimo_recebimento.valor_base
-      if juros_simples
-        juros_atual       = ultimo_recebimento.juros_atual
-        multa_atual       = ultimo_recebimento.multa_atual
-      end
 
       trocou_tipo_juros = juros_simples != ultimo_recebimento.juros_simples
       if trocou_tipo_juros
         valor_base += ultimo_recebimento.juros_atual
         valor_base += ultimo_recebimento.multa_atual
         if juros_simples
-          juros_atual = multa_atual = 0
           totais = cobranca.getTotais
           if (totais[:jurosMulta]) > totais[:recebimentos]
             multa_atual = totais[:multa] - (totais[:recebimentos] - totais[:juros])
@@ -112,6 +107,9 @@ class RecebimentosController < ApplicationController
           valor_base = cobranca.valor
           valor_base = cobranca.divida if totais[:recebimentos] > totais[:jurosMulta]
         end
+      elsif juros_simples
+        juros_atual       = ultimo_recebimento.juros_atual
+        multa_atual       = ultimo_recebimento.multa_atual
       end
       if data && data_calculo > data
         min_data_error    = -1
@@ -168,9 +166,7 @@ class RecebimentosController < ApplicationController
 
   def validar_data_recebimento
     if Recebimento.any?
-      if Recebimento.last.data > params[:data].to_date
-        return false
-      end
+      return false if Recebimento.last.data > params[:data].to_date
     end
     true
   end
@@ -220,11 +216,8 @@ class RecebimentosController < ApplicationController
   end
 
   def calcular_dCobranca(obj, dData, cobranca)
-    if dData > 0
-      return obj[:valor_base] + obj[:juros] + obj[:multa] - obj[:valor]
-    else
-      return cobranca.divida - obj[:valor]
-    end
+    return obj[:valor_base] + obj[:juros] + obj[:multa] - obj[:valor] if dData > 0
+    cobranca.divida - obj[:valor]
   end
 
 end
