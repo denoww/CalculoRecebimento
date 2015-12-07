@@ -7,8 +7,8 @@ ExceptionNotification.configure do |config|
   config.add_notifier :email, {
     :email_prefix => "[Erro no App: #{app_name}]",
     :sender_address => %{"Erro Prototipo" <erros.prototipos@seucondominio.com.br>},
-    :exception_recipients => [ENV['EMAIL_SYS_ADMIN']]
-    # :exception_recipients => ["denoww@gmail.com"]
+    # :exception_recipients => [ENV['EMAIL_SYS_ADMIN']]
+    :exception_recipients => ["denoww@gmail.com"]
   }
 end
 
