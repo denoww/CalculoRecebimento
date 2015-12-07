@@ -66,11 +66,11 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    domain:               'gmail.com',
-    user_name:            "teste.seucondominio@gmail.com",
-    password:             "testestaging",
+    address:              ENV['MAIL_DELIVERY_ADRRESS'],
+    port:                 ENV['MAIL_DELIVERY_PORT'],
+    domain:               ENV['DOMAIN'],
+    user_name:            ENV['MAIL_DELIVERY_USER_NAME'],
+    password:             ENV['MAIL_DELIVERY_PASSWORD'],
     authentication:       'plain',
     enable_starttls_auto: true
   }
