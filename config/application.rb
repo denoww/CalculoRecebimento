@@ -15,8 +15,8 @@ module ReceberCobranca
       address:              'smtp.gmail.com',
       port:                 587,
       domain:               'gmail.com',
-      user_name:            ENV['EMAIL_LOGIN_EXCEPTION_NOTIFICATION'],
-      password:             ENV['EMAIL_PASS_EXCEPTION_NOTIFICATION'],
+      user_name:            "teste.seucondominio@gmail.com",
+      password:             "testestaging",
       authentication:       'plain',
       enable_starttls_auto: true
     }
