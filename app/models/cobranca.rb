@@ -37,8 +37,8 @@ class Cobranca < ActiveRecord::Base
   end
 
   def divida
-    totais = getTotais
     return valor if recebimentos.empty?
+    totais = getTotais
     divida_total = (totais[:composicao] + totais[:jurosMulta]) - totais[:recebimentos]
     return divida_total > 0 ? divida_total : 0
   end

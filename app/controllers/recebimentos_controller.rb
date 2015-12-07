@@ -132,7 +132,8 @@ class RecebimentosController < ApplicationController
     )
 
     divida_cobranca = calcular_dCobranca(
-      {valor_base: valor_base, juros: juros, multa: multa, valor: valor}
+      {valor_base: valor_base, juros: juros, multa: multa, valor: valor},
+      diferenca_data, cobranca
     )
 
     if juros_simples
@@ -218,8 +219,12 @@ class RecebimentosController < ApplicationController
     multa || params[:multa] || 0
   end
 
-  def calcular_dCobranca(obj)
-    obj[:valor_base] + obj[:juros] + obj[:multa] - obj[:valor]
+  def calcular_dCobranca(obj, dData, cobranca)
+    if dData > 0
+      return obj[:valor_base] + obj[:juros] + obj[:multa] - obj[:valor]
+    else
+      return cobranca.divida - obj[:valor]
+    end
   end
 
 end
