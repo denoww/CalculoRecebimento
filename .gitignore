@@ -1,3 +1,4 @@
 tmp/*
 log/*
 db/development.sqlite3
+config/application.yml

@@ -1,0 +1,7 @@
+# Arquivo da gem: figaro
+development: &padrao_development
+
+  EMAIL_SYS_ADMIN: "xxxxxxxxxx@gmail.com"
+  EMAIL_LOGIN_EXCEPTION_NOTIFICATION: "teste.seucondominio@gmail.com"
+  EMAIL_PASS_EXCEPTION_NOTIFICATION: "xxxxx_password"
+
