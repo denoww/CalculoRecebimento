@@ -90,10 +90,11 @@ angular.module 'app'
             sc.receber.juros_atual = data.juros_atual
             sc.receber.valor_base = data.valor_base
             sc.receber.divida_cobranca = data.divida_cobranca
+            sc.receber.min_data_error = 0
             sc.receber.pagamentoMaior = data.pagamentoMaior
-            sc.receber.min_data = data.min_data
-            sc.receber.min_data_error = data.min_data_error
           (response)->
+            sc.receber.min_data = response.data.errors.min_date
+            sc.receber.min_data_error = -1
             sc.receber.calculando = false
 
       sc.deleteReceb = (item, index)->
