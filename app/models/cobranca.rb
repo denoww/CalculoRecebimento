@@ -21,7 +21,7 @@ class Cobranca < ActiveRecord::Base
   def getTotais
     composicao = composicao_cobrancas.sum(:valor)
     juros = recebimentos.sum(:juros) - recebimentos.sum(:juros_atual)
-    juros += recebimentos.ultimo_juros_simples.juros_atual if recebimentos.ultimo_juros_simples
+    juros += recebimentos.last.juros_atual if recebimentos.any?
     multa = recebimentos.any? ? recebimentos.first.multa : 0
     recebimento = recebimentos.sum(:valor)
     pagamentoMaior = composicao + juros + multa - recebimento
