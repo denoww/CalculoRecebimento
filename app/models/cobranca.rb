@@ -11,11 +11,19 @@ class Cobranca < ActiveRecord::Base
       multa: multa,
       divida_cobranca: divida,
       vencimento: vencimento,
+      multa_cobrada: Cobranca.multa_cobrada?,
       configCobranca: ConfigCobranca.last,
       totais: getTotais,
       recebimentos: recebimentos.map(&:to_frontEnd_obj),
       composicaoCobranca: composicao_cobrancas.ordem_de_criacao.map(&:to_frontEnd_obj)
     }
+  end
+
+  def self.multa_cobrada?
+    Recebimento.all.each do |r|
+      return true if r.multa != 0
+    end
+    return false
   end
 
   def getTotais

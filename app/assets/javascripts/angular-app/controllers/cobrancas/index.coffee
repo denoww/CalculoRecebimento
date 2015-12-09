@@ -69,15 +69,16 @@ angular.module 'app'
                 ]
 
       sc.calcularSemJurosMulta = ->
-        sc.receber.juros = null
-        sc.receber.multa = null
-        calcular()
+        $timeout ->
+          sc.receber.juros = null
+          sc.receber.multa = null
+          calcular()
+        , 900
 
       sc.calcularComJurosMulta = ()->
         $timeout ->
-          sc.receber.data = null
           calcular()
-        , 500
+        , 900
 
       calcular = ()->
         sc.receber.calculando = true

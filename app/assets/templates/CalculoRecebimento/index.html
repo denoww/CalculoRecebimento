@@ -1,5 +1,5 @@
 <section id="top-menu" class="sc-p-v-sm sc-p-h-xl sc-bg-blue">
-  <img src="https://www.seucondominio.com.br/assets/institucional/logo-mobile-c07a4de0cd57b02cf5eaffefcda8d48e.png"/>
+  <img style="width: 9em;" src="https://www.seucondominio.com.br/assets/institucional/logo-mobile-c07a4de0cd57b02cf5eaffefcda8d48e.png"/>
 </section>
 
 <p ng-show="receber.min_data_error == -1" class="sc-text-sm sc-p-md sc-text-red sc-border-red-solid-md sc-m-md sc-bg-red-lighter sc-border-radius">
@@ -13,7 +13,7 @@
       <div class="sc-p-l-md sc-p-b-md sc-align-bottom">
         <label ng-class="{'sc-cursor-not-allowed':cobranca.totais.pagamentoMaior != 0 || cobranca.divida_cobranca == 0}">
           <div ng-class="{'sc-text-gray':cobranca.totais.pagamentoMaior != 0 || cobranca.divida_cobranca == 0}" class="sc-label">Valor</div>
-          <input type='text' ng-keyup="calcularSemJurosMulta()" ng-disabled="cobranca.totais.pagamentoMaior != 0 || cobranca.divida_cobranca == 0" sc-currency-input="sc-currency-input" ng-model="receber.valor" class="sc-input-default"/>
+          <input type='text' ng-keyup="calcularComJurosMulta()" ng-disabled="cobranca.totais.pagamentoMaior != 0 || cobranca.divida_cobranca == 0" sc-currency-input="sc-currency-input" ng-model="receber.valor" class="sc-input-default"/>
         </label>
       </div>
       <div class="sc-p-l-md sc-p-b-md sc-align-bottom">
@@ -29,9 +29,9 @@
         </label>
       </div>
       <div class="sc-p-l-md sc-p-b-md sc-align-bottom">
-        <label ng-class="{'sc-cursor-not-allowed':cobranca.recebimentos.length &gt; 0}">
-          <div ng-class="{'sc-text-gray':cobranca.recebimentos.length &gt; 0}" class="sc-label">Multa</div>
-          <input ng-keyup="calcularComJurosMulta()" ng-disabled="cobranca.recebimentos.length &gt; 0" sc-currency-input="sc-currency-input" ng-model="receber.multa" class="sc-input-default"/>
+        <label ng-class="{'sc-cursor-not-allowed':cobranca.multa_cobrada}">
+          <div ng-class="{'sc-text-gray':cobranca.multa_cobrada}" class="sc-label">Multa</div>
+          <input ng-keyup="calcularComJurosMulta()" ng-disabled="cobranca.multa_cobrada" sc-currency-input="sc-currency-input" ng-model="receber.multa" class="sc-input-default"/>
         </label>
       </div>
       <div ng-show="cobranca.totais.pagamentoMaior == 0" class="sc-p-l-md sc-p-b-md sc-align-bottom">
