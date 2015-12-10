@@ -24,7 +24,7 @@ class RecebimentoService
     diferenca_data = data_pagamento - vencimento if data_pagamento
 
     valor_base = calcular_valor_base(
-      {juros_atual: juros_atual, multa_atual: multa_atual, juros_simples: juros_simples},
+      {juros_atual: juros_atual, multa_atual: multa_atual, juros_simples: juros_simples, ultimo_recebimento: ultimo_recebimento},
       cobranca
     )
 
@@ -51,10 +51,14 @@ class RecebimentoService
     pagamentoMaior = divida_cobranca if divida_cobranca < 0
     divida_cobranca = (divida_cobranca - pagamentoMaior)
 
+    nova_composicao = ultimo_recebimento ? ultimo_recebimento.nova_composicao : cobranca.valor
+    nova_composicao = divida_cobranca if divida_cobranca < nova_composicao
+
     response = {
       data: data_pagamento,
       juros: juros.round(2),
       multa: multa.round(2),
+      nova_composicao: nova_composicao.round(2),
       divida_cobranca: divida_cobranca.round(2),
       pagamentoMaior: pagamentoMaior.round(2),
       juros_atual: juros_atual.round(2),
@@ -69,8 +73,8 @@ class RecebimentoService
   private
 
   def self.calcular_valor_base(params, cobranca)
-    dividaCobranca = cobranca.divida
-    valor_base = dividaCobranca > cobranca.valor ? cobranca.valor : dividaCobranca
+    nova_composicao_cobranca = params[:ultimo_recebimento] ? params[:ultimo_recebimento][:nova_composicao] : cobranca.valor
+    valor_base = nova_composicao_cobranca
     valor_base += params[:juros_atual] + params[:multa_atual] unless params[:juros_simples]
     valor_base
   end

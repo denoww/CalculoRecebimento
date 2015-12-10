@@ -67,7 +67,7 @@ class RecebimentosController < ApplicationController
     if params[:recebimento].present?
       params.require(:recebimento).permit(
         :valor, :juros, :multa, :data, :valor_base, :juros_atual,
-        :multa_atual, :cobranca_id, :juros_simples
+        :multa_atual, :cobranca_id, :juros_simples, :nova_composicao
       )
     else
       {}

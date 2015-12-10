@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201140206) do
+ActiveRecord::Schema.define(version: 20151210170409) do
 
   create_table "cobrancas", force: :cascade do |t|
     t.decimal  "valor",      precision: 14, scale: 2
@@ -44,15 +44,16 @@ ActiveRecord::Schema.define(version: 20151201140206) do
   create_table "recebimentos", force: :cascade do |t|
     t.integer  "cobranca_id"
     t.date     "data"
-    t.decimal  "valor",         precision: 14, scale: 2
-    t.decimal  "juros",         precision: 14, scale: 2
-    t.decimal  "multa",         precision: 14, scale: 2
+    t.decimal  "valor",           precision: 14, scale: 2
+    t.decimal  "juros",           precision: 14, scale: 2
+    t.decimal  "multa",           precision: 14, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal  "juros_atual",   precision: 14, scale: 2
-    t.decimal  "multa_atual",   precision: 14, scale: 2
-    t.decimal  "valor_base",    precision: 14, scale: 2
+    t.decimal  "juros_atual",     precision: 14, scale: 2
+    t.decimal  "multa_atual",     precision: 14, scale: 2
+    t.decimal  "valor_base",      precision: 14, scale: 2
     t.boolean  "juros_simples"
+    t.decimal  "nova_composicao", precision: 14, scale: 2
   end
 
   add_index "recebimentos", ["cobranca_id"], name: "index_recebimentos_on_cobranca_id"

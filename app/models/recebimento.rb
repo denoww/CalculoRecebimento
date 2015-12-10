@@ -23,6 +23,7 @@ class Recebimento < ActiveRecord::Base
       juros: juros,
       multa: multa,
       data: data,
+      nova_composicao: nova_composicao,
       juros_simples: juros_simples,
       juros_atual: juros_atual,
       multa_atual: multa_atual,
