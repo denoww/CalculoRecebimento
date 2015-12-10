@@ -45,13 +45,8 @@ class Cobranca < ActiveRecord::Base
   end
 
   def divida
-    if recebimentos.any?
-      ultimo_recebimento = recebimentos.last
-      composicao_devedora = ultimo_recebimento.valor_base || valor
-      return composicao_devedora + ultimo_recebimento.juros + ultimo_recebimento.multa - ultimo_recebimento.valor
-    else
-      return valor
-    end
+    totais = getTotais
+    return totais[:composicao] + totais[:jurosMulta] - totais[:recebimentos]
   end
 
 end
