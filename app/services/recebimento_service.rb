@@ -39,8 +39,8 @@ class RecebimentoService
     )
 
     divida_cobranca = calcular_dCobranca(
-      {juros: params[:juros], valor_base: valor_base, juros: juros, multa: multa, valor: valor},
-      diferenca_data, cobranca
+      {juros: params[:juros], valor_base: valor_base, juros: juros, multa: multa,
+        valor: valor, ultimo_recebimento: ultimo_recebimento}, diferenca_data, cobranca
     )
 
     objAtual = jurosMultaAtual(
@@ -111,7 +111,7 @@ class RecebimentoService
   end
 
   def self.calcular_dCobranca(obj, dData, cobranca)
-    composicao_devedora = obj[:valor_base] > cobranca.valor ? cobranca.valor : obj[:valor_base]
+    composicao_devedora = obj[:ultimo_recebimento] ? obj[:ultimo_recebimento][:nova_composicao] : cobranca.valor
     return composicao_devedora + obj[:juros] + obj[:multa] - obj[:valor] if dData > 0 || obj[:juros] != nil
     cobranca.divida - obj[:valor]
   end
