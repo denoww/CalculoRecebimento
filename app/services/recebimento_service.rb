@@ -99,7 +99,7 @@ class RecebimentoService
       if obj[:juros_simples]
         juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data]
       else
-        juros = obj[:valor_base] * (1 + (cobranca.juros/100)) ^ obj[:diferenca_data]
+        juros = obj[:valor_base] * (1 + (cobranca.juros/100)) ** obj[:diferenca_data]
       end
       juros += obj[:juros_atual]
     end
