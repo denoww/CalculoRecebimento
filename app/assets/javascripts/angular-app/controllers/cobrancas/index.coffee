@@ -46,7 +46,8 @@ angular.module 'app'
           id: 1,
           config_cobrancas,
           (data)->
-            # Sucesso
+            $timeout ->
+              sc.calcularSemJurosMulta()
           (response)->
             scAlert.open
               title: 'Atenção!'
