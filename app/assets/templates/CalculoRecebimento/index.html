@@ -167,7 +167,26 @@
                   <tr ng-repeat="item in cobranca.recebimentos">
                     <td>Data do pagamento: <span class="sc-text-blue">{{item.data | date}}</span></td>
                     <td class="align-right">{{item.valor | currency}}</td>
-                    <td><i ng-click="deleteReceb(item, $index)" class="sc-icon sc-icon-lixeira-1 sc-badge-hover-red"></i></td>
+                    <td>
+                      <div ng-show="$index == cobranca.recebimentos.length-1">
+                        <div class="sc-accordion-col-3 hidden-xs" sc-stop-click>
+                          <span class="sc-dropdown" sc-dropdown-menu=''>
+                            <i class="sc-icon sc-icon-reticiencias-v sc-badge-hover-gray" ng-click='menu.toggle()' ng-class="{'sc-badge-active':menu.isOn}"></i>
+                            <ul class="sc-dropdown-menu sc-dropdown-menu-right ng-animation-slider" ng-show='menu.isOn'>
+                              <li ng-click="actionMenu(itemMenu, item)" ng-repeat="itemMenu in conf.recebMenu" >
+                                <div class="vertical-align">
+                                  <i class="sc-icon sc-m-r-lg {{itemMenu.icon}}"></i>
+                                  <span>{{itemMenu.name}}</span>
+                                </div>
+                              </li>
+                            </ul>
+                          </span>
+                        </div>
+                      </div>
+                      <div ng-hide="$index == cobranca.recebimentos.length-1">
+                        <i class="sc-icon sc-icon-olho sc-badge-hover-blue"></i>
+                      </div>
+                    </td>
                   </tr>
                   <tr ng-show="cobranca.length == 0">
                     <td>Não há cobranca para esta cobrança</td>

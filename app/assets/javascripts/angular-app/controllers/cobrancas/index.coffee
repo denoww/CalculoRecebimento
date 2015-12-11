@@ -5,6 +5,17 @@ angular.module 'app'
 
       idCobranca = 1
 
+      sc.conf =
+        recebMenu: [
+          {
+            name: "Editar"
+            icon: "sc-icon-lapis sc-text-yellow"
+          }
+          {
+            name: "Excluir"
+            icon: "sc-icon-lixeira-1 sc-text-red"
+          }
+        ]
       sc.carregando = true
       sc.cobranca = CobrancaResource.get {id: idCobranca},
         (data)->
@@ -16,6 +27,17 @@ angular.module 'app'
       sc.receber =
         data: '', valor: 0, juros: 0, multa: 0, valor_base: 0, juros_atual: 0
         multa_atual: 0, cobranca_id: idCobranca, juros_simples: true
+
+      sc.actionMenu = (item, obj)->
+        if item.name == "Excluir"
+          sc.deleteReceb(obj, buscaIndex(obj))
+
+      buscaIndex = (item)->
+        count = 0
+        for i in sc.cobranca.recebimentos
+          return count if i.id == item.id
+          count++
+        count
 
       sc.mudarTipoReceb = (j_simples = true)->
         config_cobrancas =
@@ -113,6 +135,7 @@ angular.module 'app'
                 RecebimentoResource.delete
                   id: item.id,
                   (data)->
+                    console.log index
                     sc.cobranca.recebimentos.splice index, 1
                     sc.cobranca.totais = data.totais
                     sc.cobranca.divida_cobranca = data.divida_cobranca
