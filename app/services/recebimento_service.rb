@@ -29,7 +29,7 @@ class RecebimentoService
     )
 
     juros = calcular_juros(
-      {juros: params[:juros], valor_base: valor_base, diferenca_data: diferenca_data, juros_atual: juros_atual},
+      {juros: params[:juros], valor_base: valor_base, diferenca_data: diferenca_data, juros_atual: juros_atual, juros_simples: juros_simples},
       cobranca
     )
 
@@ -96,7 +96,11 @@ class RecebimentoService
 
   def self.calcular_juros(obj, cobranca)
     if obj[:diferenca_data] > 0
-      juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data]
+      if obj[:juros_simples]
+        juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data]
+      else
+        juros = obj[:valor_base] * (1 + (cobranca.juros/100)) ^ obj[:diferenca_data]
+      end
       juros += obj[:juros_atual]
     end
     obj[:juros] || juros || 0
