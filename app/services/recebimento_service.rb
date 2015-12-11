@@ -48,7 +48,7 @@ class RecebimentoService
     )
     juros_atual, multa_atual = objAtual.values_at(:juros_atual, :multa_atual)
 
-    pagamentoMaior = divida_cobranca if divida_cobranca < 0
+    pagamentoMaior  = divida_cobranca if divida_cobranca < 0
     divida_cobranca = (divida_cobranca - pagamentoMaior)
 
     nova_composicao = ultimo_recebimento ? ultimo_recebimento.nova_composicao : cobranca.valor
@@ -96,11 +96,8 @@ class RecebimentoService
 
   def self.calcular_juros(obj, cobranca)
     if obj[:diferenca_data] > 0
-      if obj[:juros_simples]
-        juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data]
-      else
-        juros = obj[:valor_base] * (1 + (cobranca.juros/100)) ** obj[:diferenca_data]
-      end
+      juros = (obj[:valor_base] * (1 + (cobranca.juros/100)) ** obj[:diferenca_data]) - obj[:valor_base] unless obj[:juros_simples]
+      juros = obj[:valor_base] * (cobranca.juros/100) * obj[:diferenca_data] if obj[:juros_simples]
       juros += obj[:juros_atual]
     end
     obj[:juros] || juros || 0
